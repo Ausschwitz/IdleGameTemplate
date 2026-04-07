@@ -11,12 +11,24 @@ public class GameManager : MonoBehaviour
     public TextMeshProUGUI passiveText;
     public TextMeshProUGUI upgradeCostText;
 
-    private int upgradeCost = 10;
+    public ClickUpgrade clickUpgrade;
+    public PassiveUpgrade passiveUpgrade;
+    public CritSystem critSystem;
+    public OfflineManager offlineManager;
+
+    private int passiveUpgradeCost = 10;
     private float timer = 0f;
 
     void Start()
     {
         LoadGame();
+
+        if (offlineManager != null)
+        {
+            int offlineCoins = offlineManager.CalculateOfflineEarnings(passiveIncome);
+            coin += offlineCoins;
+        }
+
         UpdateUI();
     }
 
@@ -34,40 +46,66 @@ public class GameManager : MonoBehaviour
 
     public void AddCoin()
     {
-        coin += clickPower;
+        int earned = clickPower;
+
+        if (critSystem != null)
+            earned = critSystem.Calculate(clickPower);
+
+        coin += earned;
         UpdateUI();
     }
 
-    public void BuyUpgrade()
+    public void BuyPassiveUpgrade()
     {
-        if (coin >= upgradeCost)
+        if (coin >= passiveUpgradeCost)
         {
-            coin -= upgradeCost;
-            passiveIncome++;
-            upgradeCost += 10;
+            coin -= passiveUpgradeCost;
+            passiveIncome += 1;
+            passiveUpgradeCost += 10;
+            UpdateUI();
+        }
+    }
+
+    public void BuyClickUpgrade()
+    {
+        if (clickUpgrade != null)
+        {
+            clickUpgrade.Upgrade(ref coin, ref clickPower);
             UpdateUI();
         }
     }
 
     void UpdateUI()
     {
-        coinText.text = "Coin: " + coin;
-        passiveText.text = "Pasif: " + passiveIncome + "/sn";
-        upgradeCostText.text = "Fiyat: " + upgradeCost;
+        if (coinText != null)
+            coinText.text = "Coin: " + coin;
+
+        if (passiveText != null)
+            passiveText.text = "Pasif: " + passiveIncome + "/sn";
+
+        if (upgradeCostText != null)
+            upgradeCostText.text = "Fiyat: " + passiveUpgradeCost;
     }
 
     public void SaveGame()
     {
         PlayerPrefs.SetInt("coin", coin);
-        PlayerPrefs.SetInt("passive", passiveIncome);
-        PlayerPrefs.SetInt("cost", upgradeCost);
+        PlayerPrefs.SetInt("clickPower", clickPower);
+        PlayerPrefs.SetInt("passiveIncome", passiveIncome);
+        PlayerPrefs.SetInt("passiveUpgradeCost", passiveUpgradeCost);
+
+        if (offlineManager != null)
+            offlineManager.SaveTime();
+
+        PlayerPrefs.Save();
     }
 
     public void LoadGame()
     {
         coin = PlayerPrefs.GetInt("coin", 0);
-        passiveIncome = PlayerPrefs.GetInt("passive", 1);
-        upgradeCost = PlayerPrefs.GetInt("cost", 10);
+        clickPower = PlayerPrefs.GetInt("clickPower", 1);
+        passiveIncome = PlayerPrefs.GetInt("passiveIncome", 1);
+        passiveUpgradeCost = PlayerPrefs.GetInt("passiveUpgradeCost", 10);
     }
 
     void OnApplicationQuit()
