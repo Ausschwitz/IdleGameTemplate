@@ -1,0 +1,16 @@
+1. Unity aç
+2. Yeni proje oluştur
+3. Assets klasörüne GameManager.cs koy
+4. Canvas oluştur
+5. 3 Text ekle:
+   - Coin
+   - Pasif
+   - Fiyat
+6. 2 Button ekle:
+   - Kaz
+   - Upgrade
+7. GameManager objesi oluştur
+8. Scripti bağla
+9. Textleri sürükle
+10. Butonları OnClick ile bağla
+11. Play bas
