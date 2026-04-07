@@ -1,0 +1,21 @@
+1. Unity projesini aç.
+2. Repo ZIP dosyasını indir.
+3. ZIP içindeki .cs dosyalarını Unity projesindeki Assets klasörüne koy.
+4. Hierarchy içinde Canvas oluştur.
+5. Canvas içine şu objeleri ekle:
+   - CoinText
+   - PassiveText
+   - CostText
+   - KazButton
+   - UpgradeButton
+   - ClickUpgradeButton
+6. Hierarchy içine boş objeler ekle:
+   - GameManager
+   - ClickUpgrade
+   - PassiveUpgrade
+   - CritSystem
+   - OfflineManager
+7. Scriptleri kendi objelerine tak.
+8. GameManager içindeki alanlara textleri ve manager objelerini bağla.
+9. Butonların OnClick kısmına doğru fonksiyonları ver.
+10. Play bas ve test et.
